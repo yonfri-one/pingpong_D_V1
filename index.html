@@ -238,6 +238,7 @@
       <button class="qt" id="serveBtn"><span class="icon">🔄</span> <span id="qServe">Saque</span></button>
       <button class="qt" id="sideBtn"><span class="icon">↔️</span> <span id="qSide">Lados</span></button>
       <button class="qt" id="timerBtn"><span class="icon">▶</span> <span id="qTimer">Iniciar</span></button>
+      <button class="qt" id="updateBtn"><span class="icon">🔄</span> <span id="qUpdate">Actualizar</span></button>
     </div>
     <div class="live">
       <div class="item highlight"><span>⚡</span><strong id="speedDisp">0.0</strong><span>pts/min</span></div>
@@ -385,6 +386,10 @@
       importJson:'Importar JSON',
       exportJson:'Exportar JSON',
       clear:'Limpiar',
+      updateCheck:'Actualizar',
+      updateChecking:'Buscando actualizaciones...',
+      updateFound:'🔄 ¡Nueva versión disponible! Recarga la página.',
+      updateNone:'✅ Ya estás en la última versión.',
     },
     ru: {
       title:'Пинг-понг', free:'Без лимита', m11:'До 11', m21:'До 21', tournament:'Турнир',
@@ -472,6 +477,10 @@
       importJson:'Импорт JSON',
       exportJson:'Экспорт JSON',
       clear:'Очистить',
+      updateCheck:'Обновить',
+      updateChecking:'Проверка обновлений...',
+      updateFound:'🔄 Доступна новая версия! Перезагрузите страницу.',
+      updateNone:'✅ У вас последняя версия.',
     }
   };
 
@@ -528,11 +537,9 @@
   function coinToss() {
     const winner = Math.random() < 0.5 ? 'p1' : 'p2';
     state.server = winner;
-    // Reset serve stats
     state.p1.serveWon = 0; state.p1.serveLost = 0;
     state.p2.serveWon = 0; state.p2.serveLost = 0;
     state.serveChanges = 0;
-    // Show toast
     const name = gn(winner);
     toast(t('coinToss').replace('{name}', name), 'ok', 3000);
     return winner;
@@ -540,7 +547,6 @@
 
   // ─── START MATCH (coin toss + reset) ───
   function startMatch() {
-    // Reset everything
     state.p1.score = 0;
     state.p2.score = 0;
     state.points = [];
@@ -557,12 +563,9 @@
     document.getElementById('timerDisplay').classList.remove('running');
     document.querySelector('#timerBtn .icon').textContent = '▶';
     document.getElementById('qTimer').textContent = t('start');
-    // Coin toss
     coinToss();
-    // Reset log
     rebuildLog();
     updateUI();
-    // Auto-start timer
     startTimer(true);
     toast('🎯 '+t('startMatch')+'!', 'ok', 2000);
   }
@@ -672,10 +675,9 @@
 
     state[player].score++;
 
-    // AUTOMATIC SERVE: loser serves (free mode) or every 2 points (tournament)
     if(state.mode!=='tournament'){
       if(state.server!==opp) state.serveChanges++;
-      state.server = opp; // loser serves
+      state.server = opp;
     } else {
       const total=state.p1.score+state.p2.score;
       if(total%2===0){
@@ -940,6 +942,29 @@
     const reader=new FileReader(); reader.onload=e=>{ try{ const data=JSON.parse(e.target.result); if(!Array.isArray(data)) throw new Error('Formato inválido'); if(!confirm(t('confirmImport'))) return; saveMatches(data); updateUI(); toast(t('importOk'),'ok'); renderStats(); } catch(err){ toast(t('importErr')+err.message,'bad',4000); } }; reader.readAsText(file);
   }
 
+  // ─── UPDATE CHECK ───
+  async function checkForUpdates() {
+    const toastMsg = document.getElementById('toast');
+    toast(t('updateChecking'), 'warn', 10000);
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const update = await reg.update();
+      if (update) {
+        toast(t('updateFound'), 'ok', 5000);
+        // Предложим перезагрузить
+        setTimeout(() => {
+          if (confirm(t('updateFound') + ' ' + t('updateCheck') + '?')) {
+            window.location.reload();
+          }
+        }, 1500);
+      } else {
+        toast(t('updateNone'), 'ok', 3000);
+      }
+    } catch (err) {
+      toast(t('importErr') + err.message, 'bad', 4000);
+    }
+  }
+
   // ─── SETTINGS ───
   function openSettings(){
     const content=document.getElementById('settingsContent');
@@ -1037,6 +1062,7 @@
 
     // Event Listeners
     document.getElementById('startMatchBtn').addEventListener('click', startMatch);
+    document.getElementById('updateBtn').addEventListener('click', checkForUpdates);
     document.getElementById('themeToggle').addEventListener('click',toggleTheme);
     document.getElementById('settingsBtn').addEventListener('click',openSettings);
     document.getElementById('settingsClose').addEventListener('click',()=>document.getElementById('settingsModal').classList.remove('open'));
@@ -1052,6 +1078,7 @@
       document.querySelector('#qServe').textContent=t('serveSw');
       document.querySelector('#qSide').textContent=t('side');
       document.querySelector('#qTimer').textContent=state.running?t('stop'):t('start');
+      document.querySelector('#qUpdate').textContent=t('updateCheck');
       document.querySelector('#uStartMatch').textContent=t('startMatch');
       document.querySelector('#uFinish').textContent=t('finish');
       document.querySelector('#uStats').textContent=t('stats');
@@ -1139,7 +1166,6 @@
       navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
     }
 
-    // Initial coin toss
     coinToss();
     updateUI();
   }
