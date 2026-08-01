@@ -152,7 +152,7 @@
     .modal .footer-actions button:hover { border-color:var(--acc); color:var(--txt); }
     .modal .footer-actions button.danger:hover { border-color:var(--err); color:var(--err); }
 
-    /* ─── TOAST (обновлён) ─── */
+    /* ─── TOAST ─── */
     .toast {
       position: fixed;
       top: 20px;
@@ -1315,10 +1315,11 @@
       else if(key===' '){ e.preventDefault(); state.running?stopTimer():startTimer(true); }
     });
 
-    if('serviceWorker' in navigator){
-      const swCode=`self.addEventListener('install',e=>e.waitUntil(skipWaiting())); self.addEventListener('activate',e=>e.waitUntil(clients.claim())); self.addEventListener('fetch',e=>e.respondWith(fetch(e.request)));`;
-      const blob=new Blob([swCode],{type:'application/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+    // РЕГИСТРАЦИЯ СЕРВИС-ВОРКЕРА (исправлено)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('SW registered'))
+        .catch(() => console.log('SW registration failed'));
     }
 
     // Начальная жеребьёвка без тоста
