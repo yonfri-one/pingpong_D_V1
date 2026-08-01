@@ -1,16 +1,34 @@
 {
-  "name": "PingPong Pro",
+  "name": "Ping‑Pong Pro",
   "short_name": "PingPong",
-  "description": "Счёт для пинг-понга с турнирами и статистикой",
+  "description": "Ping-Pong scoreboard with stats, tournaments, Elo",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#09090F",
   "theme_color": "#09090F",
+  "background_color": "#09090F",
+  "lang": "es",
+  "dir": "ltr",
+  "orientation": "portrait",
+  "scope": "/",
+  "id": "pingpong-pro",
   "icons": [
     {
       "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏓%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF8WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDUgNzkuMTYzNDk5LCAyMDE4LzA4LzEzLTE2OjQwOjIyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5Mjk2NjI1Ny0xMDI4LTQ0NzItOGY4NC0wNjI5ZTA2MTQxN2MiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTI5NjYyNTctMTAyOC00NDcyLThmODQtMDYyOWUwNjE0MTdjIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OTI5NjYyNTctMTAyOC00NDcyLThmODQtMDYyOWUwNjE0MTdjIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjkyOTY2MjU3LTEwMjgtNDQ3Mi04Zjg0LTA2MjllMDYxNDE3YyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pp7B3cQAAAJ/SURBVHic7d0xbtwwFIZhBBEiZYIguSJp0sx0KVKnT50y11DVRSq7SS91AJ8gtXeCDBkyZMjgLnDAD8Gf2VlK2iXpfRqL5ZAkf1rs6tWrV69evXr16tWrV69e/ed8Gc8L4+2Y/nWYdvN4Hc8LX9L/YTnxjefrYRyP44nxfIyH8bP+/+t/lxP//7iutL1tczxwjNnhjF1My6LLtD80t9PouN3rX3wLmZOmBmhKoCkAaUpJg0aEBpUoDSpRGlSiNKhEaVCJ0qASpUElSoNKlAaVKA0qURpUojSoRGlQidKgEqVBJUqDSpQGlSgNKlEaVKI0qERpUInSoBKlQSVKg0qUBpUoDSpRGlSiNKlEaVKJ0qQSpUklSpNKlCaVKE0qUZpUojSpRGlSidKkEqVJJUqTSpQmlShNKlGaVKI0qURpUonSpBKlSSVKk0qUJpUoTUpLk00b2jhN05zT55r9X4N//4A/P//Pv/S6l4WNr61OnI7j/R7Xn2vePOUi1bRPWplLqFOUl8b7NMe/3/1z8bRbdHlq22mP69dMzz7zfTmey/F/fb7Tr+Q/lwe+5j8D+w3q+jfma45ddmBZduj2P/9z5HE73dde97e9/j6Xtc+V79pzXRP2HPz2lV17NcaNYb5dHvj7X/l1l2uPwW9z0PVd/OF3Hedj7HF3XHMvj82rV69evXr16tWrV69evXr1L/YbJjnpkO/1sMsAAAAASUVORK5CYII=",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAF8WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDUgNzkuMTYzNDk5LCAyMDE4LzA4LzEzLTE2OjQwOjIyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5Mjk2NjI1Ny0xMDI4LTQ0NzItOGY4NC0wNjI5ZTA2MTQxN2MiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTI5NjYyNTctMTAyOC00NDcyLThmODQtMDYyOWUwNjE0MTdjIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OTI5NjYyNTctMTAyOC00NDcyLThmODQtMDYyOWUwNjE0MTdjIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjkyOTY2MjU3LTEwMjgtNDQ3Mi04Zjg0LTA2MjllMDYxNDE3YyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pp7B3cQAAAJ/SURBVHic7d0xbtwwFIZhBBEiZYIguSJp0sx0KVKnT50y11DVRSq7SS91AJ8gtXeCDBkyZMjgLnDAD8Gf2VlK2iXpfRqL5ZAkf1rs6tWrV69evXr16tWrV69e/ed8Gc8L4+2Y/nWYdvN4Hc8LX9L/YTnxjefrYRyP44nxfIyH8bP+/+t/lxP//7iutL1tczxwjNnhjF1My6LLtD80t9PouN3rX3wLmZOmBmhKoCkAaUpJg0aEBpUoDSpRGlSiNKhEaVCJ0qASpUElSoNKlAaVKA0qURpUojSoRGlQidKgEqVBJUqDSpQGlSgNKlEaVKI0qERpUInSoBKlQSVKg0qUBpUoDSpRGlSiNKlEaVKJ0qQSpUklSpNKlCaVKE0qUZpUojSpRGlSidKkEqVJJUqTSpQmlShNKlGaVKI0qURpUonSpBKlSSVKk0qUJpUoTUpLk00b2jhN05zT55r9X4N//4A/P//Pv/S6l4WNr61OnI7j/R7Xn2vePOUi1bRPWplLqFOUl8b7NMe/3/1z8bRbdHlq22mP69dMzz7zfTmey/F/fb7Tr+Q/lwe+5j8D+w3q+jfma45ddmBZduj2P/9z5HE73dde97e9/j6Xtc+V79pzXRP2HPz2lV17NcaNYb5dHvj7X/l1l2uPwW9z0PVd/OF3Hedj7HF3XHMvj82rV69evXr16tWrV69evXr1L/YbJjnpkO/1sMsAAAAASUVORK5CYII=",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
