@@ -152,7 +152,7 @@
     .modal .footer-actions button:hover { border-color:var(--acc); color:var(--txt); }
     .modal .footer-actions button.danger:hover { border-color:var(--err); color:var(--err); }
 
-    /* ─── TOAST ─── */
+    /* ─── TOAST (обновлён) ─── */
     .toast {
       position: fixed;
       top: 20px;
@@ -206,44 +206,59 @@
       }
     }
 
-    /* ─── ЛЁГКАЯ АНИМАЦИЯ ПОДАЧИ ─── */
+    /* ─── АНИМАЦИЯ ПОДАЧИ (рамка с фоном) ─── */
     .serve-float {
       position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.6);
-      font-family: 'Bebas Neue', 'Impact', monospace;
-      font-size: 80px;
-      font-weight: 700;
-      color: var(--gold);
-      text-shadow: 0 0 40px rgba(234,179,8,0.3);
+      transform: translate(-50%, -50%) scale(0.7);
       z-index: 9998;
       pointer-events: none;
       opacity: 0;
       transition: none;
     }
     .serve-float.show {
-      animation: servePop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation: servePop 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
     @keyframes servePop {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-      25% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+      25% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
       70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -70%) scale(0.95); }
     }
-    .serve-float .sub {
+    .serve-card {
+      background: var(--surf);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 20px 32px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 30px rgba(234,179,8,0.15);
+      text-align: center;
+      backdrop-filter: blur(4px);
+      min-width: 180px;
+    }
+    .serve-card .name {
+      font-family: 'Bebas Neue', 'Impact', monospace;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(234,179,8,0.2);
+      display: block;
+      line-height: 1.2;
+    }
+    .serve-card .sub {
       font-family: var(--font);
-      font-size: 28px;
+      font-size: 20px;
       font-weight: 600;
       color: var(--mid);
-      text-shadow: none;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       display: block;
-      margin-top: -10px;
-      letter-spacing: 3px;
+      margin-top: -4px;
     }
     @media(max-width: 640px) {
-      .serve-float { font-size: 48px; }
-      .serve-float .sub { font-size: 20px; }
+      .serve-card { padding: 16px 24px; min-width: 140px; }
+      .serve-card .name { font-size: 36px; }
+      .serve-card .sub { font-size: 16px; }
     }
 
     /* ─── адаптивность ─── */
@@ -386,8 +401,13 @@
 <!-- Toast -->
 <div class="toast" id="toast"><span id="toastMsg"></span><button class="close-toast" id="toastClose">✕</button></div>
 
-<!-- Лёгкая анимация подачи -->
-<div class="serve-float" id="serveFloat"><span id="sfName">Illya</span><span class="sub" id="sfLabel">SIRVE</span></div>
+<!-- Анимация подачи (рамка с фоном) -->
+<div class="serve-float" id="serveFloat">
+  <div class="serve-card">
+    <span class="name" id="sfName">Illya</span>
+    <span class="sub" id="sfLabel">SIRVE</span>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -642,7 +662,7 @@
     if (toastTimer) clearTimeout(toastTimer);
   });
 
-  // ─── ЛЁГКАЯ АНИМАЦИЯ ПОДАЧИ ───
+  // ─── АНИМАЦИЯ ПОДАЧИ (рамка с фоном) ───
   let serveTimer = null;
   function showServe(player) {
     const el = document.getElementById('serveFloat');
@@ -658,7 +678,7 @@
     el.classList.add('show');
     serveTimer = setTimeout(() => {
       el.classList.remove('show');
-    }, 1200);
+    }, 1400);
   }
 
   // ─── ЖЕРЕБЬЁВКА ───
@@ -904,7 +924,7 @@
     state.server = state.server === 'p1' ? 'p2' : 'p1';
     state.serveChanges++;
     sndSwitch();
-    showServe(state.server); // лёгкая анимация
+    showServe(state.server);
     updateUI();
   }
   function switchSide(){ state.side=state.side==='normal'?'swapped':'normal'; const grid=document.getElementById('playersGrid'); if(state.side==='swapped') grid.style.direction='rtl'; else grid.style.direction='ltr'; sndSwitch(); toast(t('sidesSwap')); }
