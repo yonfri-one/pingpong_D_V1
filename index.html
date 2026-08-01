@@ -150,11 +150,116 @@
     .modal .footer-actions button { background:var(--surf2); border:1px solid var(--brd); border-radius:8px; padding:10px 18px; font-size:14px; font-weight:600; color:var(--mid); cursor:pointer; transition:0.15s; }
     .modal .footer-actions button:hover { border-color:var(--acc); color:var(--txt); }
     .modal .footer-actions button.danger:hover { border-color:var(--err); color:var(--err); }
-    .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--surf); border:1px solid var(--brd); border-radius:16px; padding:14px 24px; font-weight:600; font-size:16px; color:var(--txt); z-index:2000; transition:0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events:none; box-shadow:0 8px 30px rgba(0,0,0,0.5); white-space:nowrap; }
-    .toast.show { transform:translateX(-50%) translateY(0); }
-    .toast.ok { border-color:var(--ok); }
-    .toast.warn { border-color:var(--gold); }
-    .toast.bad { border-color:var(--err); }
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: var(--surf);
+      border: 2px solid var(--brd);
+      border-radius: 20px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--txt);
+      z-index: 9999;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+      opacity: 0;
+      pointer-events: none;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      max-width: 92vw;
+      white-space: nowrap;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .toast.ok { border-color: var(--ok); }
+    .toast.warn { border-color: var(--gold); }
+    .toast.bad { border-color: var(--err); }
+    .toast .close-toast {
+      background: none;
+      border: none;
+      color: var(--mid);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    .toast .close-toast:hover { color: var(--err); }
+    @media(max-width: 640px) {
+      .toast {
+        font-size: 15px;
+        padding: 12px 16px;
+        white-space: normal;
+        max-width: 92vw;
+        top: 10px;
+      }
+    }
+    /* ─── АНИМАЦИЯ ПОДАЧИ ─── */
+    .serve-anim {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .serve-anim.show {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: none;
+    }
+    .serve-inner {
+      background: var(--surf);
+      border: 3px solid var(--gold);
+      border-radius: 40px;
+      padding: 40px 50px;
+      text-align: center;
+      box-shadow: 0 0 80px rgba(234,179,8,0.2);
+      min-width: 240px;
+      animation: pulse-glow 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes pulse-glow {
+      0% { box-shadow: 0 0 40px rgba(234,179,8,0.1); }
+      100% { box-shadow: 0 0 80px rgba(234,179,8,0.3); }
+    }
+    .serve-emoji { font-size: 56px; margin-bottom: 6px; }
+    .serve-name {
+      font-size: 44px;
+      font-weight: 800;
+      margin: 4px 0;
+      background: linear-gradient(135deg, var(--gold), #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .serve-label {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    @media(max-width: 640px) {
+      .serve-inner { padding: 28px 20px; min-width: 160px; }
+      .serve-emoji { font-size: 40px; }
+      .serve-name { font-size: 32px; }
+      .serve-label { font-size: 18px; }
+    }
     @media(max-width:640px){
       body { padding:8px; }
       .main { padding:16px 12px; }
@@ -292,7 +397,17 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- Toast -->
+<div class="toast" id="toast"><span id="toastMsg"></span><button class="close-toast" id="toastClose">✕</button></div>
+
+<!-- ─── АНИМАЦИЯ ПОДАЧИ ─── -->
+<div class="serve-anim" id="serveAnim">
+  <div class="serve-inner">
+    <div class="serve-emoji">🏓</div>
+    <div class="serve-name" id="serveName">Ilya</div>
+    <div class="serve-label" id="serveLabel">Sirve</div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -530,22 +645,57 @@
   function sndFinish(){ beep(660,.15,'square'); setTimeout(()=>beep(880,.2,'square'),150); if(navigator.vibrate) navigator.vibrate([30,20,30,20,60]); }
   function sndStart(){ beep(440,.1); setTimeout(()=>beep(550,.1),120); if(navigator.vibrate) navigator.vibrate(20); }
 
-  let toastTimer=null;
-  function toast(msg,cls='',dur=2500){ const el=document.getElementById('toast'); if(toastTimer) clearTimeout(toastTimer); el.textContent=msg; el.className='toast show '+cls; toastTimer=setTimeout(()=>el.classList.remove('show'),dur); }
+  // ─── TOAST ───
+  let toastTimer = null;
+  function toast(msg, cls = '', dur = 3500) {
+    const el = document.getElementById('toast');
+    const msgEl = document.getElementById('toastMsg');
+    if (toastTimer) clearTimeout(toastTimer);
+    msgEl.textContent = msg;
+    el.className = 'toast ' + cls;
+    requestAnimationFrame(() => { el.classList.add('show'); });
+    toastTimer = setTimeout(() => { el.classList.remove('show'); }, dur);
+  }
+  document.getElementById('toastClose').addEventListener('click', function() {
+    const el = document.getElementById('toast');
+    el.classList.remove('show');
+    if (toastTimer) clearTimeout(toastTimer);
+  });
 
-  // ─── RANDOM FIRST SERVER WITH COIN TOSS ───
-  function coinToss() {
+  // ─── АНИМАЦИЯ ПОДАЧИ ───
+  let serveAnimTimer = null;
+  function showServeAnimation(player) {
+    const el = document.getElementById('serveAnim');
+    const nameEl = document.getElementById('serveName');
+    const labelEl = document.getElementById('serveLabel');
+    const name = gn(player);
+    nameEl.textContent = name;
+    labelEl.textContent = t('serve').toUpperCase();
+    el.classList.remove('show');
+    if (serveAnimTimer) clearTimeout(serveAnimTimer);
+    void el.offsetWidth;
+    el.classList.add('show');
+    serveAnimTimer = setTimeout(() => {
+      el.classList.remove('show');
+    }, 3000);
+  }
+
+  // ─── ЖЕРЕБЬЁВКА ───
+  function coinToss(showToast = true, showAnim = true) {
     const winner = Math.random() < 0.5 ? 'p1' : 'p2';
     state.server = winner;
     state.p1.serveWon = 0; state.p1.serveLost = 0;
     state.p2.serveWon = 0; state.p2.serveLost = 0;
     state.serveChanges = 0;
     const name = gn(winner);
-    toast(t('coinToss').replace('{name}', name), 'ok', 3000);
+    if (showAnim) showServeAnimation(winner);
+    if (showToast) {
+      toast('🎲 ' + t('coinToss').replace('{name}', name), 'ok', 2500);
+    }
     return winner;
   }
 
-  // ─── START MATCH (coin toss + reset) ───
+  // ─── ЗАПУСК МАТЧА ───
   function startMatch() {
     state.p1.score = 0;
     state.p2.score = 0;
@@ -563,11 +713,11 @@
     document.getElementById('timerDisplay').classList.remove('running');
     document.querySelector('#timerBtn .icon').textContent = '▶';
     document.getElementById('qTimer').textContent = t('start');
-    coinToss();
+    coinToss(true, true);
     rebuildLog();
     updateUI();
     startTimer(true);
-    toast('🎯 '+t('startMatch')+'!', 'ok', 2000);
+    toast('🎯 ' + t('startMatch') + '!', 'ok', 2500);
   }
 
   // ─── TIMER ───
@@ -769,7 +919,14 @@
   }
   function resetGame(){ if((state.p1.score>0||state.p2.score>0)&&!confirm(t('confirmReset'))) return; resetGameInternal(); }
 
-  function switchServe(){ state.server=state.server==='p1'?'p2':'p1'; state.serveChanges++; sndSwitch(); updateUI(); }
+  function switchServe(){
+    state.server = state.server === 'p1' ? 'p2' : 'p1';
+    state.serveChanges++;
+    sndSwitch();
+    showServeAnimation(state.server); // <-- анимация при ручной смене подачи
+    updateUI();
+  }
+
   function switchSide(){ state.side=state.side==='normal'?'swapped':'normal'; const grid=document.getElementById('playersGrid'); if(state.side==='swapped') grid.style.direction='rtl'; else grid.style.direction='ltr'; sndSwitch(); toast(t('sidesSwap')); }
 
   // ─── ACHIEVEMENTS ───
@@ -790,7 +947,7 @@
     if(newAch.length){ saveAch([...earned,...newAch]); toast(t('achUnlocked')+newAch.map(a=>a.name+': '+a.desc).join(', '),'ok',4000); }
   }
 
-  // ─── STATS ─── (same as before, only server field added)
+  // ─── STATS ───
   function openStats(){ currentTab='general'; document.querySelectorAll('#statsTabs .tab').forEach(t=>t.classList.toggle('active',t.dataset.tab==='general')); renderStats(); document.getElementById('statsModal').classList.add('open'); }
   function closeStats(){ document.getElementById('statsModal').classList.remove('open'); }
   function renderStats(){
@@ -944,14 +1101,12 @@
 
   // ─── UPDATE CHECK ───
   async function checkForUpdates() {
-    const toastMsg = document.getElementById('toast');
     toast(t('updateChecking'), 'warn', 10000);
     try {
       const reg = await navigator.serviceWorker.ready;
       const update = await reg.update();
       if (update) {
         toast(t('updateFound'), 'ok', 5000);
-        // Предложим перезагрузить
         setTimeout(() => {
           if (confirm(t('updateFound') + ' ' + t('updateCheck') + '?')) {
             window.location.reload();
@@ -1166,7 +1321,12 @@
       navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
     }
 
-    coinToss();
+    // Начальная жеребьёвка без анимации и тоста (просто назначаем сервер)
+    const winner = Math.random() < 0.5 ? 'p1' : 'p2';
+    state.server = winner;
+    state.p1.serveWon = 0; state.p1.serveLost = 0;
+    state.p2.serveWon = 0; state.p2.serveLost = 0;
+    state.serveChanges = 0;
     updateUI();
   }
 
