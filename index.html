@@ -1315,7 +1315,7 @@
       else if(key===' '){ e.preventDefault(); state.running?stopTimer():startTimer(true); }
     });
 
-    // РЕГИСТРАЦИЯ СЕРВИС-ВОРКЕРА (исправлено)
+    // РЕГИСТРАЦИЯ СЕРВИС-ВОРКЕРА
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
         .then(() => console.log('SW registered'))
