@@ -150,6 +150,8 @@
     .modal .footer-actions button { background:var(--surf2); border:1px solid var(--brd); border-radius:8px; padding:10px 18px; font-size:14px; font-weight:600; color:var(--mid); cursor:pointer; transition:0.15s; }
     .modal .footer-actions button:hover { border-color:var(--acc); color:var(--txt); }
     .modal .footer-actions button.danger:hover { border-color:var(--err); color:var(--err); }
+
+    /* ─── TOAST ─── */
     .toast {
       position: fixed;
       top: 20px;
@@ -202,6 +204,7 @@
         top: 10px;
       }
     }
+
     /* ─── АНИМАЦИЯ ПОДАЧИ ─── */
     .serve-anim {
       position: fixed;
@@ -260,6 +263,7 @@
       .serve-name { font-size: 32px; }
       .serve-label { font-size: 18px; }
     }
+
     @media(max-width:640px){
       body { padding:8px; }
       .main { padding:16px 12px; }
@@ -282,7 +286,6 @@
       .modal .grid-2, .modal .grid-3 { grid-template-columns:1fr 1fr; gap:8px; }
       .modal .stat-card .value { font-size:22px; }
       .modal .match-list .m-item .m-score { font-size:22px; min-width:60px; }
-      .toast { font-size:14px; padding:12px 20px; white-space:normal; max-width:90%; }
     }
     @media(max-width:400px){
       .p-col .score { font-size:50px; }
@@ -319,11 +322,11 @@
     </div>
     <div class="players" id="playersGrid">
       <div class="p-col p1" id="col1">
-        <div class="name" id="name1">Ilya</div>
+        <div class="name" id="name1">Illya</div>
         <div class="score" id="score1">0</div>
         <div class="pip" id="pip1"></div>
         <div class="stat" id="stat1">saque: <strong>0%</strong></div>
-        <button class="btn-point" id="btn1"><span id="btn1Label">ILYA</span></button>
+        <button class="btn-point" id="btn1"><span id="btn1Label">ILLYA</span></button>
       </div>
       <div class="p-col centre">
         <div class="colon">:</div>
@@ -400,11 +403,11 @@
 <!-- Toast -->
 <div class="toast" id="toast"><span id="toastMsg"></span><button class="close-toast" id="toastClose">✕</button></div>
 
-<!-- ─── АНИМАЦИЯ ПОДАЧИ ─── -->
+<!-- Анимация подачи -->
 <div class="serve-anim" id="serveAnim">
   <div class="serve-inner">
     <div class="serve-emoji">🏓</div>
-    <div class="serve-name" id="serveName">Ilya</div>
+    <div class="serve-name" id="serveName">Illya</div>
     <div class="serve-label" id="serveLabel">Sirve</div>
   </div>
 </div>
@@ -413,7 +416,6 @@
 (function(){
   'use strict';
 
-  // ─── TRANSLATIONS ───
   const LANG = {
     es: {
       title:'PingPong', free:'Libre', m11:'11', m21:'21', tournament:'Torneo',
@@ -451,7 +453,7 @@
       playersLabel:'Jugadores',
       addPlayer:'Agregar jugador',
       playerName:'Nombre',
-      defaultPlayers:'Ilya, Mati',
+      defaultPlayers:'Illya, Mati',
       eloRating:'Rating Elo',
       matchCount:'Partidos',
       wins:'Victorias',
@@ -542,7 +544,7 @@
       playersLabel:'Игроки',
       addPlayer:'Добавить игрока',
       playerName:'Имя',
-      defaultPlayers:'Илья, Мати',
+      defaultPlayers:'Illya, Мати',
       eloRating:'Рейтинг Elo',
       matchCount:'Матчей',
       wins:'Победы',
@@ -613,7 +615,7 @@
     points: [], undo: [],
     streak: { player: null, count: 0 },
     serveChanges: 0,
-    names: { p1:'Ilya', p2:'Mati' },
+    names: { p1:'Illya', p2:'Mati' },
     pending: null, restore: null,
     elo: { p1:1200, p2:1200 },
   };
@@ -657,8 +659,7 @@
     toastTimer = setTimeout(() => { el.classList.remove('show'); }, dur);
   }
   document.getElementById('toastClose').addEventListener('click', function() {
-    const el = document.getElementById('toast');
-    el.classList.remove('show');
+    document.getElementById('toast').classList.remove('show');
     if (toastTimer) clearTimeout(toastTimer);
   });
 
@@ -681,14 +682,14 @@
   }
 
   // ─── ЖЕРЕБЬЁВКА ───
-  function coinToss(showToast = true, showAnim = true) {
+  function coinToss(showToast = true) {
     const winner = Math.random() < 0.5 ? 'p1' : 'p2';
     state.server = winner;
     state.p1.serveWon = 0; state.p1.serveLost = 0;
     state.p2.serveWon = 0; state.p2.serveLost = 0;
     state.serveChanges = 0;
     const name = gn(winner);
-    if (showAnim) showServeAnimation(winner);
+    showServeAnimation(winner);
     if (showToast) {
       toast('🎲 ' + t('coinToss').replace('{name}', name), 'ok', 2500);
     }
@@ -713,7 +714,7 @@
     document.getElementById('timerDisplay').classList.remove('running');
     document.querySelector('#timerBtn .icon').textContent = '▶';
     document.getElementById('qTimer').textContent = t('start');
-    coinToss(true, true);
+    coinToss(true);
     rebuildLog();
     updateUI();
     startTimer(true);
@@ -923,7 +924,7 @@
     state.server = state.server === 'p1' ? 'p2' : 'p1';
     state.serveChanges++;
     sndSwitch();
-    showServeAnimation(state.server); // <-- анимация при ручной смене подачи
+    showServeAnimation(state.server);
     updateUI();
   }
 
@@ -1124,7 +1125,7 @@
   function openSettings(){
     const content=document.getElementById('settingsContent');
     const prefs=loadPrefs();
-    const players=prefs.players || ['Ilya','Mati'];
+    const players=prefs.players || ['Illya','Mati'];
     let playerListHtml=players.map((p,i)=>`<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;"><input type="text" value="${p}" data-idx="${i}" style="background:var(--surf2);border:1px solid var(--brd);border-radius:6px;padding:8px 10px;flex:1;color:var(--txt);font-size:16px;"><button class="btn-icon" data-remove="${i}" style="width:36px;height:36px;font-size:18px;">✕</button></div>`).join('');
     content.innerHTML=`
       <div class="set-row" style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--brd);">
@@ -1174,7 +1175,7 @@
     document.getElementById('resetPlayersBtn').addEventListener('click',function(){
       const list=document.getElementById('playerList');
       list.innerHTML='';
-      ['Ilya','Mati'].forEach((name,i)=>{
+      ['Illya','Mati'].forEach((name,i)=>{
         const div=document.createElement('div'); div.style.display='flex'; div.style.gap='6px'; div.style.alignItems='center'; div.style.marginBottom='6px';
         div.innerHTML=`<input type="text" value="${name}" data-idx="${i}" style="background:var(--surf2);border:1px solid var(--brd);border-radius:6px;padding:8px 10px;flex:1;color:var(--txt);font-size:16px;"><button class="btn-icon" data-remove="${i}" style="width:36px;height:36px;font-size:18px;">✕</button>`;
         list.appendChild(div);
@@ -1215,7 +1216,6 @@
     document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.m===mode));
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.l===lang));
 
-    // Event Listeners
     document.getElementById('startMatchBtn').addEventListener('click', startMatch);
     document.getElementById('updateBtn').addEventListener('click', checkForUpdates);
     document.getElementById('themeToggle').addEventListener('click',toggleTheme);
@@ -1321,7 +1321,7 @@
       navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
     }
 
-    // Начальная жеребьёвка без анимации и тоста (просто назначаем сервер)
+    // Начальная жеребьёвка без анимации
     const winner = Math.random() < 0.5 ? 'p1' : 'p2';
     state.server = winner;
     state.p1.serveWon = 0; state.p1.serveLost = 0;
