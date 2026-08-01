@@ -8,6 +8,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏓%3C/text%3E%3C/svg%3E">
   <style>
+    /* ─── CSS Variables ─── */
     :root {
       --bg: #0A0A12; --surf: #12121F; --surf2: #1A1A30; --brd: #252540;
       --txt: #F1F5F9; --mid: #5A6480; --dim: #2E2E4A;
@@ -165,7 +166,7 @@
       font-size: 18px;
       color: var(--txt);
       z-index: 9999;
-      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s;
       opacity: 0;
       pointer-events: none;
       box-shadow: 0 8px 40px rgba(0,0,0,0.6);
@@ -205,65 +206,47 @@
       }
     }
 
-    /* ─── АНИМАЦИЯ ПОДАЧИ ─── */
-    .serve-anim {
+    /* ─── ЛЁГКАЯ АНИМАЦИЯ ПОДАЧИ ─── */
+    .serve-float {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      font-family: 'Bebas Neue', 'Impact', monospace;
+      font-size: 80px;
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(234,179,8,0.3);
+      z-index: 9998;
       pointer-events: none;
       opacity: 0;
-      transform: scale(0.6);
-      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      transition: none;
     }
-    .serve-anim.show {
-      opacity: 1;
-      transform: scale(1);
-      pointer-events: none;
+    .serve-float.show {
+      animation: servePop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
-    .serve-inner {
-      background: var(--surf);
-      border: 3px solid var(--gold);
-      border-radius: 40px;
-      padding: 40px 50px;
-      text-align: center;
-      box-shadow: 0 0 80px rgba(234,179,8,0.2);
-      min-width: 240px;
-      animation: pulse-glow 1.5s ease-in-out infinite alternate;
+    @keyframes servePop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+      25% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+      70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -70%) scale(1); }
     }
-    @keyframes pulse-glow {
-      0% { box-shadow: 0 0 40px rgba(234,179,8,0.1); }
-      100% { box-shadow: 0 0 80px rgba(234,179,8,0.3); }
-    }
-    .serve-emoji { font-size: 56px; margin-bottom: 6px; }
-    .serve-name {
-      font-size: 44px;
-      font-weight: 800;
-      margin: 4px 0;
-      background: linear-gradient(135deg, var(--gold), #ffd700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .serve-label {
-      font-size: 22px;
+    .serve-float .sub {
+      font-family: var(--font);
+      font-size: 28px;
       font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      color: var(--mid);
+      text-shadow: none;
+      display: block;
+      margin-top: -10px;
+      letter-spacing: 3px;
     }
     @media(max-width: 640px) {
-      .serve-inner { padding: 28px 20px; min-width: 160px; }
-      .serve-emoji { font-size: 40px; }
-      .serve-name { font-size: 32px; }
-      .serve-label { font-size: 18px; }
+      .serve-float { font-size: 48px; }
+      .serve-float .sub { font-size: 20px; }
     }
 
+    /* ─── адаптивность ─── */
     @media(max-width:640px){
       body { padding:8px; }
       .main { padding:16px 12px; }
@@ -403,19 +386,14 @@
 <!-- Toast -->
 <div class="toast" id="toast"><span id="toastMsg"></span><button class="close-toast" id="toastClose">✕</button></div>
 
-<!-- Анимация подачи -->
-<div class="serve-anim" id="serveAnim">
-  <div class="serve-inner">
-    <div class="serve-emoji">🏓</div>
-    <div class="serve-name" id="serveName">Illya</div>
-    <div class="serve-label" id="serveLabel">Sirve</div>
-  </div>
-</div>
+<!-- Лёгкая анимация подачи -->
+<div class="serve-float" id="serveFloat"><span id="sfName">Illya</span><span class="sub" id="sfLabel">SIRVE</span></div>
 
 <script>
 (function(){
   'use strict';
 
+  // ─── TRANSLATIONS ───
   const LANG = {
     es: {
       title:'PingPong', free:'Libre', m11:'11', m21:'21', tournament:'Torneo',
@@ -544,7 +522,7 @@
       playersLabel:'Игроки',
       addPlayer:'Добавить игрока',
       playerName:'Имя',
-      defaultPlayers:'Illya, Мати',
+      defaultPlayers:'Илья, Мати',
       eloRating:'Рейтинг Elo',
       matchCount:'Матчей',
       wins:'Победы',
@@ -659,26 +637,28 @@
     toastTimer = setTimeout(() => { el.classList.remove('show'); }, dur);
   }
   document.getElementById('toastClose').addEventListener('click', function() {
-    document.getElementById('toast').classList.remove('show');
+    const el = document.getElementById('toast');
+    el.classList.remove('show');
     if (toastTimer) clearTimeout(toastTimer);
   });
 
-  // ─── АНИМАЦИЯ ПОДАЧИ ───
-  let serveAnimTimer = null;
-  function showServeAnimation(player) {
-    const el = document.getElementById('serveAnim');
-    const nameEl = document.getElementById('serveName');
-    const labelEl = document.getElementById('serveLabel');
+  // ─── ЛЁГКАЯ АНИМАЦИЯ ПОДАЧИ ───
+  let serveTimer = null;
+  function showServe(player) {
+    const el = document.getElementById('serveFloat');
+    const nameEl = document.getElementById('sfName');
+    const labelEl = document.getElementById('sfLabel');
     const name = gn(player);
     nameEl.textContent = name;
     labelEl.textContent = t('serve').toUpperCase();
+    // Сброс
     el.classList.remove('show');
-    if (serveAnimTimer) clearTimeout(serveAnimTimer);
+    if (serveTimer) clearTimeout(serveTimer);
     void el.offsetWidth;
     el.classList.add('show');
-    serveAnimTimer = setTimeout(() => {
+    serveTimer = setTimeout(() => {
       el.classList.remove('show');
-    }, 3000);
+    }, 1200);
   }
 
   // ─── ЖЕРЕБЬЁВКА ───
@@ -689,7 +669,7 @@
     state.p2.serveWon = 0; state.p2.serveLost = 0;
     state.serveChanges = 0;
     const name = gn(winner);
-    showServeAnimation(winner);
+    showServe(winner);
     if (showToast) {
       toast('🎲 ' + t('coinToss').replace('{name}', name), 'ok', 2500);
     }
@@ -924,10 +904,9 @@
     state.server = state.server === 'p1' ? 'p2' : 'p1';
     state.serveChanges++;
     sndSwitch();
-    showServeAnimation(state.server);
+    showServe(state.server); // лёгкая анимация
     updateUI();
   }
-
   function switchSide(){ state.side=state.side==='normal'?'swapped':'normal'; const grid=document.getElementById('playersGrid'); if(state.side==='swapped') grid.style.direction='rtl'; else grid.style.direction='ltr'; sndSwitch(); toast(t('sidesSwap')); }
 
   // ─── ACHIEVEMENTS ───
@@ -1216,6 +1195,7 @@
     document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.m===mode));
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.l===lang));
 
+    // Event Listeners
     document.getElementById('startMatchBtn').addEventListener('click', startMatch);
     document.getElementById('updateBtn').addEventListener('click', checkForUpdates);
     document.getElementById('themeToggle').addEventListener('click',toggleTheme);
@@ -1321,7 +1301,7 @@
       navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
     }
 
-    // Начальная жеребьёвка без анимации
+    // Начальная жеребьёвка без тоста
     const winner = Math.random() < 0.5 ? 'p1' : 'p2';
     state.server = winner;
     state.p1.serveWon = 0; state.p1.serveLost = 0;
